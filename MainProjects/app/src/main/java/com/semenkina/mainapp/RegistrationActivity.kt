@@ -1,5 +1,7 @@
 package com.semenkina.mainapp
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
@@ -9,22 +11,24 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 
-class MainActivity : AppCompatActivity() {
+class RegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_registration)
         val button = findViewById<Button>(R.id.button)
         val phone = findViewById<TextView>(R.id.number_textview)
         val email = findViewById<TextView>(R.id.email_textview)
-        val edittext_number= findViewById<EditText>(R.id.editTextPhoneNumber)
-        val edittext_email = findViewById<EditText>(R.id.editTextEmail)
+        val edittext_number_email= findViewById<EditText>(R.id.editTextPhoneNumber_Email)
         val edittext_password = findViewById<EditText>(R.id.editTextPassword)
         val edittext_COPYpassword = findViewById<EditText>(R.id.editTextRepeatPassword)
         var VARIATION = "phone"
+        val APP_PREFERENCES = "settings"
+        val storage = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+        //public static final String APP_PREFERENCES_NAME = "Nickname"; // имя кота
+        //public static final String APP_PREFERENCES_AGE = "Age";
         fun CLEAR()
         {
-            edittext_email.setText("")
-            edittext_number.setText("")
+            edittext_number_email.setText("")
             edittext_password.setText("")
             edittext_COPYpassword.setText("")
         }
@@ -34,8 +38,9 @@ class MainActivity : AppCompatActivity() {
             email.setTypeface(null,Typeface.NORMAL)
             phone.setTextColor(Color.parseColor("#602077"))
             email.setTextColor(Color.parseColor("#9980A8"))
-            edittext_number.requestFocus()
+            edittext_number_email.requestFocus()
             VARIATION = "phone"
+            edittext_number_email.setHint("Введите номер телефона")
             CLEAR()
         }
         email.setOnClickListener()
@@ -44,8 +49,8 @@ class MainActivity : AppCompatActivity() {
             phone.setTypeface(null,Typeface.NORMAL)
             email.setTextColor(Color.parseColor("#602077"))
             phone.setTextColor(Color.parseColor("#9980A8"))
-            edittext_email.requestFocus()
             VARIATION = "email"
+            edittext_number_email.setHint("Введите адрес почты")
             CLEAR()
         }
         button.setOnClickListener()
@@ -54,18 +59,25 @@ class MainActivity : AppCompatActivity() {
             var COPYpassword = edittext_COPYpassword.text.toString()
             if(password == COPYpassword)
             {
+                var num = edittext_number_email.text.toString()
                 if (VARIATION == "phone")
                 {
-                    var num = edittext_number.text.toString()
-                    if (num.indexOf("+") == 0 && num.length >= 8) {
+                    if ((num.indexOf("+") == 0 && num.length ==12) || (num.indexOf("8") == 0 && num.length ==11)){
                         Toast.makeText(this, "Успешный ввод", Toast.LENGTH_LONG).show()
+                        storage.edit().putString("phone_number", num).apply()
+                        storage.edit().putString("password", password).apply()
+                        val intent_splash = Intent(this, SplashActivity::class.java)
+                        //startActivity(intent_splash)
                     }
                 }
                 else if (VARIATION == "email")
                 {
-                    var em = edittext_email.text.toString()
-                    if (em.indexOf("@") != -1) {
+                    if (num.indexOf("@") != -1) {
                         Toast.makeText(this, "Успешный ввод", Toast.LENGTH_LONG).show()
+                        storage.edit().putString("email", num).apply()
+                        storage.edit().putString("password", password).apply()
+                        val intent_splash = Intent(this, SplashActivity::class.java)
+                        startActivity(intent_splash)
                     }
                 }
                 else

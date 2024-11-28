@@ -15,4 +15,7 @@
     <string name="enter_phone">Введите номер телефона</string>
     <string name="repeat_password">Повторите пароль</string>
     <string name="register">Зарегистрироваться</string>
+    <string name="Hello">С возвращением!</string>
+    <string name="number_email">Введите номер или адрес почты</string>
+    <string name="save_login">Не выходить из системы</string>
 </resources>
